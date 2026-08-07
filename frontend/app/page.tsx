@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Search, Bell, ChevronRight } from "lucide-react";
@@ -9,14 +9,11 @@ import { BottomNav } from "@/components/home/BottomNav";
 import { TournamentCard } from "@/components/home/TournamentCard";
 import { PosterCard } from "@/components/home/PosterCard";
 import { useNotificationStore } from "@/store/notificationStore";
+import axios from "axios";
 
-// Mock Data
-const MOCK_TOURNAMENTS = [
-  { id: "1", title: "Kasarani Open 2025", date: "15 - 17 May", venue: "Kasarani Indoor Arena", teams: 12 },
-  { id: "2", title: "Umoja Cup 2025", date: "22 - 24 August", venue: "Umoja Sports Grounds", teams: 8 },
-  { id: "3", title: "Eastlands Championship", date: "10 - 12 October", venue: "Pumwani Grounds", teams: 10 },
-];
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://volleyball-mtaa-backend.onrender.com';
 
+// Mock Posters (Keep mock until Phase A5)
 const MOCK_POSTERS = [
   { id: "1", title: "Kayole Fest" },
   { id: "2", title: "South B Cup" },
@@ -25,14 +22,31 @@ const MOCK_POSTERS = [
 
 export default function HomePage() {
   const { unreadCount } = useNotificationStore();
+  const [tournaments, setTournaments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTournaments = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/v1/tournaments?limit=4&sort=newest`);
+        setTournaments(response.data.data);
+      } catch (error) {
+        console.error("Failed to fetch tournaments:", error);
+        // Fallback to empty array if API fails
+        setTournaments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTournaments();
+  }, []);
 
   return (
     <div className="min-h-screen bg-vball-bg pb-[90px]">
       
-      {/* --- Top Header with Notification Bell --- */}
+      {/* --- Top Header --- */}
       <header className="sticky top-0 z-40 bg-vball-navy text-white px-4 py-3 flex justify-between items-center shadow-md">
         <div className="flex items-center gap-3">
-          {/* Logo */}
           <div className="w-10 h-10 bg-vball-yellow rounded-xl flex items-center justify-center text-vball-navy font-bold text-[10px] leading-tight text-center shadow-lg">
             VM<br/>NBO
           </div>
@@ -58,7 +72,6 @@ export default function HomePage() {
         {/* 1. Hero Banner */}
         <section className="relative rounded-2xl overflow-hidden h-44 bg-gradient-to-r from-vball-blue to-vball-navy shadow-md">
           <div className="absolute inset-0 bg-black/20"></div>
-          {/* FIXED: Valid Unsplash image URL */}
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
           <div className="relative z-10 p-5 flex flex-col justify-between h-full text-white">
             <div>
@@ -72,7 +85,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 2. Upcoming Tournaments */}
+        {/* 2. Upcoming Tournaments (Real API Data) */}
         <section>
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold text-lg text-vball-navy">Upcoming Tournaments</h3>
@@ -81,16 +94,28 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="flex flex-col gap-3">
-            {MOCK_TOURNAMENTS.map((t, idx) => (
-              <motion.div 
-                key={t.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-              >
-                <TournamentCard {...t} />
-              </motion.div>
-            ))}
+            {loading ? (
+              <div className="text-center text-gray-500 py-4 text-sm">Loading tournaments...</div>
+            ) : tournaments.length === 0 ? (
+              <div className="text-center text-gray-500 py-4 text-sm">No upcoming tournaments found.</div>
+            ) : (
+              tournaments.map((t: any, idx: number) => (
+                <motion.div 
+                  key={t._id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                >
+                  <TournamentCard 
+                    id={t._id}
+                    title={t.title}
+                    date={new Date(t.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    venue={t.venue}
+                    teams={t.maxTeams}
+                  />
+                </motion.div>
+              ))
+            )}
           </div>
         </section>
 
@@ -138,7 +163,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 6. Calendar Preview (Keys Fixed) */}
+        {/* 6. Calendar Preview */}
         <section>
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold text-lg text-vball-navy">This Month's Events</h3>
@@ -155,7 +180,6 @@ export default function HomePage() {
               </div>
             </div>
             <div className="grid grid-cols-7 gap-1 text-center text-xs">
-              {/* FIXED: Unique keys using full day names */}
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
                 <div key={d} className="py-1 font-semibold text-gray-400">{d[0]}</div>
               ))}
