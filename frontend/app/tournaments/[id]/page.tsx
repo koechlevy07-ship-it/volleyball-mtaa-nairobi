@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { BottomNav } from "@/components/home/BottomNav";
 import { CommentSection } from "@/components/comments/CommentSection";
+import { TournamentChat } from "@/components/chat/TournamentChat";
 import { 
   Calendar, MapPin, Users, Share2, ChevronLeft, 
   Clock, Trophy, CheckCircle, UserCheck
@@ -221,7 +222,12 @@ export default function TournamentDetailsPage() {
           </div>
         </Card>
 
-        {/* 9. Comments Section */}
+        {/* 9. Tournament Chat Room */}
+        <div className="mt-4">
+          <TournamentChat tournamentId={id} tournamentTitle={`${tournament.title} Chat`} />
+        </div>
+
+        {/* 10. Comments Section */}
         <div className="mt-4">
           <CommentSection tournamentId={id} />
         </div>
