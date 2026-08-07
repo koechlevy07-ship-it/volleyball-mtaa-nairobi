@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Ignore TypeScript errors during build (we already tested in dev)
+  // Production strict mode: Failing TypeScript checks will stop the build
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
+  },
+  // Production strict mode: Failing ESLint checks will stop the build
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 };
 
