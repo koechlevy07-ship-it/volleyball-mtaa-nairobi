@@ -24,7 +24,7 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     if (password !== confirmPassword) return;
-    await register(name, email, password, role);
+    await register(name, email, password, phone, role);
     router.push("/");
   };
 

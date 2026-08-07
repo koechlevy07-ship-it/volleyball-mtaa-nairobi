@@ -1,15 +1,17 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Volleyball Mtaa Nairobi API",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
@@ -21,6 +23,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.1",
     "multer": "^2.2.0",
+    "nodemailer": "^6.9.16",
     "socket.io": "^4.8.1",
     "streamifier": "^0.1.1"
   },
@@ -32,6 +35,9 @@
     "@types/mongoose": "^5.11.96",
     "@types/multer": "^2.2.0",
     "@types/node": "^26.1.2",
-    "nodemon": "^3.1.9"
+    "@types/nodemailer": "^6.4.16",
+    "nodemon": "^3.1.9",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
   }
 }
