@@ -14,4 +14,8 @@ export const config = {
   emailPort: parseInt(process.env.EMAIL_PORT || '587'),
   emailUser: process.env.EMAIL_USER || '',
   emailPass: process.env.EMAIL_PASS || '',
+  // Cloudinary
+  cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+  cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || '',
+  cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || '',
 };
