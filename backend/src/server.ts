@@ -6,7 +6,9 @@ import mongoose from 'mongoose';
 import { config } from './config/env';
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
-import tournamentRoutes from './routes/tournamentRoutes'; // <--- ADD THIS LINE
+import tournamentRoutes from './routes/tournamentRoutes';
+import posterRoutes from './routes/posterRoutes';
+import announcementRoutes from './routes/announcementRoutes'; // <--- ADD THIS LINE
 import { errorHandler } from './middleware/errorMiddleware';
 import logger from './utils/logger';
 
@@ -39,7 +41,9 @@ app.use('/api', limiter);
 
 // API Routes
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/tournaments', tournamentRoutes); // <--- ADD THIS LINE
+app.use('/api/v1/tournaments', tournamentRoutes);
+app.use('/api/v1/posters', posterRoutes);
+app.use('/api/v1/announcements', announcementRoutes); // <--- ADD THIS LINE
 
 // Health Check
 app.get('/health', (req, res) => {
