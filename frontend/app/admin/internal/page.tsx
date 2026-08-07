@@ -1,5 +1,6 @@
 "use client";
 
+import { RoleGuard } from "@/components/auth/RoleGuard";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -18,26 +19,26 @@ import {
   Clock
 } from "lucide-react";
 
-export default function SuperAdminDashboardPage() {
-  // Mock Data - In real app, fetch from API
-  const stats = {
-    totalUsers: 2458,
-    totalTournaments: 124,
-    pendingApprovals: 8,
-    pendingReports: 5,
-    activeChats: 23,
-  };
+// (Your existing dashboard UI goes here - unchanged)
+const stats = {
+  totalUsers: 2458,
+  totalTournaments: 124,
+  pendingApprovals: 8,
+  pendingReports: 5,
+  activeChats: 23,
+};
 
-  const pendingTournaments = [
-    { id: "1", name: "Kasarani Open 2025", organizer: "Volleyball Mtaa", date: "15 May", status: "Pending" },
-    { id: "2", name: "Umoja Cup 2025", organizer: "Umoja Sports", date: "22 Aug", status: "Pending" },
-  ];
+const pendingTournaments = [
+  { id: "1", name: "Kasarani Open 2025", organizer: "Volleyball Mtaa", date: "15 May", status: "Pending" },
+  { id: "2", name: "Umoja Cup 2025", organizer: "Umoja Sports", date: "22 Aug", status: "Pending" },
+];
 
-  const recentReports = [
-    { id: "1", user: "Anonymous", reason: "Spam", tournament: "Eastlands Champs", time: "2 min ago" },
-    { id: "2", user: "Guest User", reason: "Harassment", tournament: "Kasarani Open", time: "1 hour ago" },
-  ];
+const recentReports = [
+  { id: "1", user: "Anonymous", reason: "Spam", tournament: "Eastlands Champs", time: "2 min ago" },
+  { id: "2", user: "Guest User", reason: "Harassment", tournament: "Kasarani Open", time: "1 hour ago" },
+];
 
+function SuperAdminDashboardContent() {
   return (
     <div className="min-h-screen bg-vball-bg">
       <header className="sticky top-0 z-40 bg-vball-navy text-white px-4 py-3 flex items-center justify-between shadow-md">
@@ -54,7 +55,6 @@ export default function SuperAdminDashboardPage() {
 
       <main className="px-4 pt-4 space-y-4 max-w-md mx-auto pb-6">
         
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <Card className="p-4 bg-vball-blue/5 border-vball-blue/20">
             <div className="w-8 h-8 bg-vball-blue/10 rounded-lg flex items-center justify-center text-vball-blue mb-2">
@@ -86,7 +86,6 @@ export default function SuperAdminDashboardPage() {
           </Card>
         </div>
 
-        {/* Admin Quick Actions */}
         <div className="grid grid-cols-2 gap-3">
           <Link href="/admin/internal/users">
             <Card className="p-4 text-center hover:shadow-soft transition-shadow cursor-pointer h-full flex flex-col items-center justify-center gap-1 border-l-4 border-l-vball-blue">
@@ -126,7 +125,6 @@ export default function SuperAdminDashboardPage() {
           </Link>
         </div>
 
-        {/* Pending Tournaments */}
         <div>
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold text-vball-navy text-sm">Pending Tournament Approvals</h3>
@@ -154,7 +152,6 @@ export default function SuperAdminDashboardPage() {
           </div>
         </div>
 
-        {/* Recent Reports */}
         <Card>
           <h3 className="font-bold text-vball-navy text-sm mb-3">Recent Reports</h3>
           <div className="space-y-3">
@@ -175,5 +172,13 @@ export default function SuperAdminDashboardPage() {
 
       </main>
     </div>
+  );
+}
+
+export default function SuperAdminPage() {
+  return (
+    <RoleGuard allowedRoles={["super_admin"]} redirectTo="/login">
+      <SuperAdminDashboardContent />
+    </RoleGuard>
   );
 }

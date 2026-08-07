@@ -1,5 +1,6 @@
 "use client";
 
+import { RoleGuard } from "@/components/auth/RoleGuard";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -17,24 +18,24 @@ import {
   AlertCircle
 } from "lucide-react";
 
-export default function OrganizerDashboardPage() {
-  // Mock Data - In real app, fetch from API
-  const stats = {
-    totalTournaments: 4,
-    activeTournaments: 2,
-    totalParticipants: 156,
-    totalComments: 89,
-    upcoming: [
-      { id: "1", title: "Kasarani Open 2025", date: "15 May", participants: 48, status: "Upcoming" },
-      { id: "2", title: "Umoja Cup 2025", date: "22 Aug", participants: 32, status: "Draft" },
-    ],
-    recentActivity: [
-      { id: "1", action: "New participant registered", tournament: "Kasarani Open", time: "2 min ago" },
-      { id: "2", action: "Comment reported", tournament: "Umoja Cup", time: "1 hour ago" },
-      { id: "3", action: "Tournament published", tournament: "Eastlands Champs", time: "3 hours ago" },
-    ]
-  };
+// Your existing dashboard data
+const stats = {
+  totalTournaments: 4,
+  activeTournaments: 2,
+  totalParticipants: 156,
+  totalComments: 89,
+  upcoming: [
+    { id: "1", title: "Kasarani Open 2025", date: "15 May", participants: 48, status: "Upcoming" },
+    { id: "2", title: "Umoja Cup 2025", date: "22 Aug", participants: 32, status: "Draft" },
+  ],
+  recentActivity: [
+    { id: "1", action: "New participant registered", tournament: "Kasarani Open", time: "2 min ago" },
+    { id: "2", action: "Comment reported", tournament: "Umoja Cup", time: "1 hour ago" },
+    { id: "3", action: "Tournament published", tournament: "Eastlands Champs", time: "3 hours ago" },
+  ]
+};
 
+function OrganizerDashboardContent() {
   return (
     <div className="min-h-screen bg-vball-bg pb-[90px]">
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
@@ -53,7 +54,6 @@ export default function OrganizerDashboardPage() {
 
       <main className="px-4 pt-4 space-y-4 max-w-md mx-auto pb-6">
         
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <Card className="p-4">
             <div className="w-8 h-8 bg-vball-blue/10 rounded-lg flex items-center justify-center text-vball-blue mb-2">
@@ -89,7 +89,6 @@ export default function OrganizerDashboardPage() {
           </Card>
         </div>
 
-        {/* Quick Links */}
         <div className="grid grid-cols-3 gap-3">
           <Link href="/organizer-dashboard/analytics">
             <Card className="p-4 text-center hover:shadow-soft transition-shadow cursor-pointer h-full flex flex-col items-center justify-center gap-1">
@@ -111,7 +110,6 @@ export default function OrganizerDashboardPage() {
           </Link>
         </div>
 
-        {/* Upcoming Tournaments */}
         <div>
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold text-vball-navy text-sm">My Tournaments</h3>
@@ -141,7 +139,6 @@ export default function OrganizerDashboardPage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <Card>
           <h3 className="font-bold text-vball-navy text-sm mb-3">Recent Activity</h3>
           <div className="space-y-3">
@@ -164,5 +161,13 @@ export default function OrganizerDashboardPage() {
 
       <BottomNav />
     </div>
+  );
+}
+
+export default function OrganizerDashboardPage() {
+  return (
+    <RoleGuard allowedRoles={["organizer", "super_admin"]} redirectTo="/login">
+      <OrganizerDashboardContent />
+    </RoleGuard>
   );
 }
