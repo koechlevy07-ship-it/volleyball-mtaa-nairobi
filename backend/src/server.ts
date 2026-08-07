@@ -8,7 +8,8 @@ import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
 import tournamentRoutes from './routes/tournamentRoutes';
 import posterRoutes from './routes/posterRoutes';
-import announcementRoutes from './routes/announcementRoutes'; // <--- ADD THIS LINE
+import announcementRoutes from './routes/announcementRoutes';
+import commentRoutes from './routes/commentRoutes'; // <--- ADD THIS LINE
 import { errorHandler } from './middleware/errorMiddleware';
 import logger from './utils/logger';
 
@@ -43,7 +44,8 @@ app.use('/api', limiter);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/tournaments', tournamentRoutes);
 app.use('/api/v1/posters', posterRoutes);
-app.use('/api/v1/announcements', announcementRoutes); // <--- ADD THIS LINE
+app.use('/api/v1/announcements', announcementRoutes);
+app.use('/api/v1/comments', commentRoutes); // <--- ADD THIS LINE
 
 // Health Check
 app.get('/health', (req, res) => {
