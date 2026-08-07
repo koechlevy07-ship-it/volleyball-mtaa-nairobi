@@ -1,14 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IChatRoom extends Document {
-  tournamentId: mongoose.Types.ObjectId;
+  tournamentId: string;
   participants: mongoose.Types.ObjectId[];
   lastMessageAt?: Date;
 }
 
 const ChatRoomSchema: Schema = new Schema(
   {
-    tournamentId: { type: Schema.Types.ObjectId, ref: 'Tournament', required: true, unique: true },
+    tournamentId: { type: String, required: true, unique: true },
     participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     lastMessageAt: { type: Date },
   },
